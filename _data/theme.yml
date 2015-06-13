@@ -2,28 +2,30 @@
 
 # Color for top bar, links, etc
 highlight_color: '#3498db'
+# highlight_color: '#007ACC'
+
 
 # Profile links on the left sidebar, leave blank to ignore
 social:
-  github: swanson
+  github: dharmit
   #bitbucket: philipj
-  hacker_news: swanson
+  # hacker_news: swanson
   #stackexchange: 348619
   #stackoverflow: 348619
-  twitter: _swanson
-  #facebook: zuck
+  twitter: dharm1t
+  # facebook: shahdharmit
   #tumblr: animalygifs
-  #linkedin: philipjagielski
+  linkedin: dharmitshah
   #gplus: 110552447039675960964
-  #gravatar: 86e6ff8f75f9daef42d53b7f8002fd95
+  gravatar: 885694dadfac0d5cd8f0e99bb4a17f26
 
 # "Hi, I'm _______"
-name: Matt Swanson
-email: test@example.com
-tagline: "weak opinions, strongly held"
+name: Dharmit Shah
+email: shahdharmit@gmail.com
+tagline: "an irregular journal"
 
 # Google Analytics key, leave blank to ignore
-google_analytics_key: UA-xxxx-x
+google_analytics_key: UA-64076936-1
 
 # Toggle "Postings are my own" disclaimer in footer
 show_disclaimer: true
