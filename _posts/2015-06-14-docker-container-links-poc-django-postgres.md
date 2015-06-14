@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Linking Docker containers- A POC using django and postgres
+title: Linking Docker containers - A POC using django and postgres
 categories:
 - blog
 ---
