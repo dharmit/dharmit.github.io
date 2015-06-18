@@ -1,18 +1,20 @@
 ---
 layout: post
-title: Linking Docker containers - A POC using django and postgres
+title: Linking Docker containers - A POC using Django and PostgreSQL
 categories:
 - blog
 ---
 
 
-As I mentioned in my [earlier post](dharmit.github.io/blog/2015/06/13/moving-from-wordpress-to-jekyll.html){:target="_blank"}, I was working on writing a blog about linking docker containers running `django` and `postgresql`.
+As I mentioned in my [earlier post](dharmit.github.io/blog/2015/06/13/moving-from-wordpress-to-jekyll.html){:target="_blank"}, I was working on writing a blog about linking docker containers running Django and PostgreSQL.
 
-Docker container linking is not a new thing. It's been used widely by a lot of people out there. However, when I wanted to link a django and postgres container, I could only find posts that explained the linking using some existing django code.
+Docker container linking is not a new thing. It's been used widely by a lot of people out there. However, when I wanted to link a Django and PostgreSQL container, I could only find posts that explained the linking using some existing Djanngo code.
 
 What I was actually looking for was the modifications to be made to `settings.py`, way to correctly run a postgres container, and then link them correctly. Since I couldn't find such a post, I wrote one myself in the hope of it being useful for someone who is same situation as I was.
 
-This post doesn't have any boilerplate code and walks you through steps right from creating a django project to creating the containers and then linking them in the end.
+In case you don't want to walkthrough the code and directly want to test Docker container linking with Django and PostgreSQL by pulling images from Docker Hub, [click here](#quick-setup).
+
+This post doesn't have any boilerplate code and walks you through steps right from creating a Django project to creating the containers and then linking them in the end.
 
 Software versions:
 
@@ -24,10 +26,10 @@ Software versions:
 
 Docker images:
 
-* Ubuntu (latest)
-* Postgres official image
+* [Ubuntu official image](https://registry.hub.docker.com/_/ubuntu/)
+* [Postgres official image](https://registry.hub.docker.com/u/library/postgres/)
 
-First we will create a django project and see if things work well on the local system. Follow below steps to create a Django project and an app:
+First we will create a Django project and see if things work well on the local system. Follow below steps to create a Django project and an app:
 
 {% highlight sh %}
 
@@ -174,7 +176,7 @@ def user_create(request):
 
 {% endhighlight %}
 
-I think that is it. You can now test `POST` and `GET` requests by running the django dev server:
+That is it. You can now test `POST` and `GET` requests by running the Django dev server:
 
 {% highlight sh %}
 $ python manage.py runserver
@@ -200,7 +202,7 @@ $ pip freeze > requirements.txt
 
 `requirements.txt` could be in the same directory as `manage.py`.
 
-Now that we have everything working on the host which has django and postgresql configured on it, we will move towards dockerizing the setup and link the containers running django and postgresql.
+Now that we have everything working on the host which has Django and PostgreSQL configured on it, we will move towards dockerizing the setup and link the containers running Django and PostgreSQL.
 
 Create a Dockerfile like below:
 
@@ -221,12 +223,16 @@ RUN pip install -r requirements.txt
 and build an image out of it:
 
 {% highlight sh %}
-$ sudo docker build -t django .
+$ sudo docker build -t django-postgres-link .
 {% endhighlight %}
+
+Alternatively, you can also download image created using above Dockerfile from [Docker Hub](https://hub.docker.com/u/dharmit/django-postgresql-link/){:target="_blank"}.
 
 Going through Dockerfile line by line, `python-pip` package is required to install the project dependencies from earlier created `requirements.txt` file. `python-dev` and `postgresql-server-dev-all` packages are required to make sure that `psycopg2` has its dependencies preinstalled. Then we copy the code from host system to the container and install dependencies from `requirements.txt`.
 
-Let's start the postgresql container:
+### Quick setup
+
+Start the PostgreSQL container:
 
 {% highlight sh %}
 
@@ -244,11 +250,19 @@ $ psql -h <container-ip-address> -U postgres
 
 Above command should work without specifying host with `-h` switch. I need to figure it out.
 
-Create a throwaway container to apply migrations from our django app:
+If you're going to pull image from Docker Hub,
 
 {% highlight sh %}
 
-$ sudo docker run --rm --link db:db django python manage.py migrate
+$ sudo docker pull dharmit/django-postgresql-link
+
+{% endhighlight %}
+
+Create a throwaway container to apply migrations from our Django app:
+
+{% highlight sh %}
+
+$ sudo docker run --rm --link db:db django-postgres-link python manage.py migrate
 
 {% endhighlight %}
 
@@ -256,7 +270,7 @@ And finally create a container that would serve our REST APIs:
 
 {% highlight sh %}
 
-$ sudo docker run -d --name web -p 80:8000 --link db:db django python manage.py runserver 0.0.0.0:8000
+$ sudo docker run -d --name web -p 80:8000 --link db:db django-postgres-link python manage.py runserver 0.0.0.0:8000
 
 {% endhighlight %}
 
