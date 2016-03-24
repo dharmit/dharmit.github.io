@@ -8,7 +8,12 @@ categories:
 Being able to automatically test pull requests is one of the most important
 requirements for most open source projects. Doing this is very easy when you
 use the [Jenkins instance](https://ci.centos.org/) provided by [CentOS
-project](https://www.centos.org/).
+project](https://www.centos.org/). CentOS Project is really generous and helps
+any open source project use its CI infrastructure for automated testing and
+CI. And the cool thing is that the slaves these tests get executed upon have
+pretty awesome configurations! You can check the [Getting
+Started](https://wiki.centos.org/QaWiki/CI/GettingStarted) page on CentOS wiki
+to learn about how to ask for your open source project to be added!
 
 If you don't already have access to CentOS CI, you can read all about it on its
 [wiki page](https://wiki.centos.org/QaWiki/CI/). You can also come and talk
